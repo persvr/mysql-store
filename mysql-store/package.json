@@ -1,0 +1,40 @@
+{
+  "name": "mysql-store",
+  "version": "0.1.0",
+  "author": "Kris Zyp",
+  "email": "kriszyp@gmail.com",
+  "keywords": [
+    "mysql",
+    "object",
+    "store",
+    "persevere"
+  ],
+  "maintainers": [
+  	{
+  		"name": "Kris Zyp",
+  		"email": "kriszyp@gmail.com"
+  	}
+  ],
+  "licenses": [
+     {
+         "type": "AFLv2.1",
+         "url": "http://trac.dojotoolkit.org/browser/dojo/trunk/LICENSE#L43"
+     },
+     {
+         "type": "BSD",
+         "url": "http://trac.dojotoolkit.org/browser/dojo/trunk/LICENSE#L13"
+     }
+  ],
+  "repository": {
+    "type":"git",
+    "url":"http://github.com/persvr/mongodb-store"
+  },
+  "directories": {
+    "lib": "."
+  },
+  "main": "mysql.js",
+  "dependencies":{
+    "perstore": ">=0.3.0",
+    "mysql-native": ">=0.4.3"
+  }
+}
