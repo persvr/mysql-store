@@ -12,6 +12,17 @@ mysql-store can be installed with NPM via:
 
 If you are using this with Persevere, please see the Persevere [documentation](http://persvr.org/Documentation).
 
+Using
+=====
+
+You can create new SQL store:
+
+	store = require("mysql-store").SQLStore({
+		table: table,
+		idColumn: idColumn
+	});
+
+
 Licensing
 --------
 
