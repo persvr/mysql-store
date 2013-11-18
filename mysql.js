@@ -4,7 +4,8 @@
  * Currently only supports MySQL.
  */
 
-var DatabaseError = require('perstore/errors').DatabaseError;
+var DatabaseError = require('perstore/errors').DatabaseError,
+	DuplicateEntryError = require('perstore/errors').DuplicateEntryError;
 // set the SQL database
 var sqlStore = require('perstore/store/sql');
 sqlStore.SQLDatabase = MysqlWrapper;
@@ -40,19 +41,25 @@ function MysqlWrapper(params) {
 			if(charset && charset.name=="utf8") conn.execute("SET NAMES utf8");
 			var cmd = conn.execute(query,args);
 
-			cmd.on('result', function() {
+			cmd.on('result', function(result) {
 				if (conn.clean && callback) {
 					callback({
-						insertId: cmd.result.insert_id,
-						rowsAffected: cmd.result.affected_rows,
-						rows: cmd.result.rows
+						insertId: result.insert_id,
+						rowsAffected: result.affected_rows,
+						rows: result.rows
 					});
 				}
 			});
 			cmd.on('error', function(err) {
 				conn.clean = false;
-				if (errback)
-					errback(err);
+				if(errback) {
+					var patt=/^duplicate entry/ig;
+					if(err && patt.test(err.message)) {
+						errback(new DuplicateEntryError(err.message));
+					} else {
+						errback(err);
+					}
+				}
 			});
 		},
 		transaction: function() {
@@ -95,6 +102,8 @@ function MysqlWrapper(params) {
 		ret.row_as_hash = true;
 		ret.clean = true;
 
+		// use charset if available
+		if(params.charset) ret.set("charset",params.charset);
 		throwOnError(ret.connection, 'connect to DB');
 		throwOnError(ret.auth(params.name, params.username, params.password), 'authenticate');
 
